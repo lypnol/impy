@@ -11,7 +11,7 @@ class AllILoopsTest(Test):
         self.i = i
 
     def run(self, graph, states):
-        paths = set(graph.run(state) for state in states)
+        paths = set(''.join(graph.run(state)) for state in states)
         for path in graph.get_paths(max_whiles=self.i):
             if path not in paths:
                 return False

@@ -3,7 +3,7 @@
 
 from astree.Tree import Tree
 from astree.ExpArithmetic import ExpArithmetic
-from astree.utils import find_bloc_brackets
+from astree.utils import find_bloc_brackets, replace_all_vars
 
 
 BINOP_BOOL = ['||', '&&']
@@ -118,3 +118,25 @@ class ExpBoolean(Tree):
 
     def opposit(self):
         return ExpBoolean('!', self)
+
+    def to_exp(self):
+        if self.left and self.right:
+            return f"({self.left.to_exp()} {self.op} {self.right.to_exp()})"
+        elif self.left and not self.right:
+            return f"{self.op}({self.left.to_exp()})"
+        return self.op
+
+    def to_func(self):
+        catch_vars = []
+        self.eval({}, catch_vars=catch_vars)
+        catch_vars = sorted(set(catch_vars))
+        exp = self.to_exp()
+        exp = exp.replace('||', 'or')
+        exp = exp.replace('&&', 'and')
+        exp = exp.replace('!(', 'not (')
+        if exp == "true":
+            return lambda: True, []
+        elif exp == "false":
+            return lambda: False, []
+        func = lambda *x: eval(replace_all_vars(exp, catch_vars, *x))
+        return func, catch_vars

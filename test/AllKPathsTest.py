@@ -11,8 +11,9 @@ class AllKPathsTest(Test):
         self.k = k
 
     def run(self, graph, states):
+        paths = set(''.join(graph.run(state)) for state in states)
         for path in graph.get_paths(max_length=self.k):
-            if not any(path == graph.run(state) for state in states):
+            if path not in paths:
                 return False
         return True
 

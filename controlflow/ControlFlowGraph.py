@@ -13,44 +13,13 @@ from astree.StatementWhile import StatementWhile
 
 """
 ControlFlowGraph represents a program's control flow graph.
-the ControlFlowGraph of the following example program:
-1 : if X <= 0
-    then 2 : X := −X;
-    else 3 : X := 1 − X;
-4 : if X == 1
-    then 5 : X := 1;
-    else 6 : X := X + 1;
-
-would be:
-{
-    '1': {
-        '2': (ExpBoolean.parse("x <= 0"), StatementSkip()),
-        '3': (ExpBoolean.parse("!(x <= 0)"), StatementSkip())
-    },
-    '2': {
-        '4': (ExpBoolean.parse("true"), StatementAssign.parse("x:=-x"))
-    },
-    '3': {
-        '4': (ExpBoolean.parse("true"), StatementAssign.parse("x:=1-x"))
-    },
-    '4': {
-        '5': (ExpBoolean.parse("x == 1"), StatementSkip()),
-        '6': (ExpBoolean.parse("!(x == 1)"), StatementSkip())
-    },
-    '5': {
-        ' ': (ExpBoolean.parse("true"), StatementAssign.parse("x:=1"))
-    },
-    '6': {
-        ' ': (ExpBoolean.parse("true"), StatementAssign.parse("x:=x+1"))
-    }
-}
 """
 class ControlFlowGraph:
 
     def __init__(self, source):
         self.s = {}             # dict statements:  label => statement
         self.g = {}             # dict graph:       label => label => [ExpBool, Statement]
-        self.p = {}             # dict parents:     label => label
+        self.p = {}             # dict parents:     label => [label]
         self.start = None       # starting node
 
         self.source = AST.preprocess(source)
@@ -68,6 +37,9 @@ class ControlFlowGraph:
             self.p[b] = [a]
         else:
             self.p[b].append(a)
+
+    def get_edge(self, u, v):
+        return self.g[u][v]
 
     def build_from_ast(self, ast, return_to=' '):
         start_label = None
@@ -137,64 +109,59 @@ class ControlFlowGraph:
                     res.add((u, v))
         return res
 
-    def get_paths(self, max_length=0, max_whiles=0):
-        raise NotImplementedError
+    def get_edges_to(self, *classtypes):
+        res = set()
+        classtypes = [StatementAssign, StatementIf, StatementSkip, StatementWhile] if not classtypes else classtypes
+        for u in self.g:
+            if u == ' ':
+                continue
+            if any(isinstance(self.s[u], statement_class) for statement_class in classtypes):
+                for p in self.p[u]:
+                    res.add((p, u))
+        return res
 
+    def get_paths_to(self, node, suffix=''):
+        suffix = node+suffix
+        if node not in self.p or node == self.start:
+            return [suffix]
+        paths = []
+        for parent in self.p[node]:
+            if parent not in suffix:
+                paths.extend(self.get_paths_to(parent, suffix))
+        return paths
+
+    def get_paths(self, max_length=-1, max_whiles=-1, node=None, prefix=''):
+        node = self.start if node is None else node
+        if max_length == 0 or max_whiles == 0:
+            return []
+        if isinstance(self.s[node], StatementWhile):
+            max_whiles -= 1
+        if node == ' ':
+            return [prefix]
+        paths = []
+        for v in self.g[node]:
+            if v not in prefix:
+                paths.extend(self.get_paths(max_length-1, max_whiles, v, prefix+node))
+        return paths
 
 if __name__ == "__main__":
-    cfg = ControlFlowGraph("""
-1 : if (X <= 0) {
-    2 : X := -X;
-} else {
-    3 : X := 1 - X;
-}
-4 : if (X == 1) {
-    5 : X := 1;
-} else {
-    6 : X := X + 1;
-}
-""")
-#     cfg = ControlFlowGraph("""
-# 0 : X := 2;
-# 1 : if (X <= 0) {
-#     2 : X := -X;
-# } else {
-#     3 : X := 1 - X;
-# }
-# 4 : if (X == 1) {
-#     5 : X := 1;
-#     6 : X := X + 1;
-# }
-# 7 : Y := 5;
-# 8 : while Y + X >= X    
-# {
-#     9 : Y := X - Y;
-#     10 : X := Y + X;
-#     11 : if ((X < 2) && (1 >= 0)) || true {
-#         12 : var := 4*3;
-#         13: if X > 0 {
-#             14: X := X;
-#         }
-#     }
-# }
-#     """)
-
-    import matplotlib.pyplot as plt
     import networkx as nx
+    import sys
+    import os.path
+    from networkx.drawing.nx_agraph import graphviz_layout, to_agraph
+
+    source_path = "examples/src/prog1.imp" if len(sys.argv) < 2 else sys.argv[1]
+    with open(source_path) as source_file:
+        graph = ControlFlowGraph(source_file.read())
 
     G = nx.DiGraph()
-    for u in cfg.g:
-        if u == cfg.start:
-            G.add_node(u, label=u, fillcolor='white', rank=0)
-        else:
-            G.add_node(u, label=u, fillcolor='white')
-    for u, connections in cfg.g.items():
+    for u in graph.g:
+        G.add_node(u, label=u, fillcolor='white', labelfontsize=22)
+    for u, connections in graph.g.items():
         for v, edge in connections.items():
-            print(u, "->", v)
-            print(edge[0])
-            print(edge[1])
-            G.add_edge(u, v, label=f'{edge[0].__class__.__name__} {edge[1].__class__.__name__}')
+            G.add_edge(u, v, label=f'{edge[0].to_exp()}\n{edge[1].to_exp()}', fontsize=9)
 
-    nx.draw(G, pos=nx.spring_layout(G))
-    plt.axis("off")
-    plt.show()
+    A = to_agraph(G)
+    A.layout('dot')
+    output = os.path.join(os.path.dirname(source_path), os.path.basename(source_path)+'.png')
+    A.draw(output)

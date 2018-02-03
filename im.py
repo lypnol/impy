@@ -34,7 +34,7 @@ def main():
     if (args.tests or args.all_tests) and not (args.generate_pass or args.generate_fail or args.input):
         return print("Cannot run tests without input states. Use -i, -gp or -gf flags.", file=sys.stderr)
 
-    if (args.generate_pass or args.generate_fail) and not (args.tests and len(args.tests) != 1):
+    if (args.generate_pass or args.generate_fail) and not (args.tests and len(args.tests) == 1):
         return print("Generate flag can only be used with -t flag.", file=sys.stderr)    
 
     test_types = None

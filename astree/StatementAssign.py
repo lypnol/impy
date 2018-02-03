@@ -26,3 +26,6 @@ class StatementAssign(Tree):
 
     def eval(self, state, catch_vars=None):
         state[self.var] = self.arithmetic_exp.eval(state, catch_vars)
+
+    def to_exp(self):
+        return f'{self.var} := {self.arithmetic_exp.to_exp()}'

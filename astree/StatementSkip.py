@@ -11,3 +11,6 @@ class StatementSkip(Tree):
 
     def eval(self, state, catch_vars=None):
         pass
+
+    def to_exp(self):
+        return "skip"

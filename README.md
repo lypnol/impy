@@ -49,7 +49,22 @@ x: -3
 
 Run AllAssignmentsTest on prog1.imp:
 ```
-$ ./im.py examples/src/prog1.imp -t TA -i examples/tests/TA.json
+$ ./im.py examples/src/prog1.imp -t TA -i examples/tests/TA1.json
 AllAssignmentsTest pass
 ```
  
+Generate data set to pass AllAssignmentsTest for prog1
+```
+$ ./im.py examples/src/prog1.imp -t TA -gp
+[
+    {
+        "x": 99
+    },
+    {
+        "x": 0
+    },
+    {
+        "x": -1
+    }
+]
+```

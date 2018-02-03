@@ -78,3 +78,10 @@ class ExpArithmetic(Tree):
                 catch_vars.append(self.op)
                 return
             return state[self.op]
+
+    def to_exp(self):
+        if self.left and self.right:
+            return f"({self.left.to_exp()} {self.op} {self.right.to_exp()})"
+        elif self.left and not self.right:
+            return f"{self.op}{self.left.to_exp()}"
+        return self.op

@@ -23,3 +23,8 @@ def find_bloc_brackets(lines, start=0, bracket='{'):
                 closing_idx = i
                 return openning_idx+start, closing_idx+start
     return -1, -1
+
+def replace_all_vars(exp, catch_vars, *val):
+    for i, v in enumerate(val):
+        exp = exp.replace(f'{catch_vars[i]}', str(v))
+    return exp
