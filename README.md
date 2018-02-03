@@ -49,7 +49,7 @@ x: -3
 
 Run AllAssignmentsTest on prog1.imp:
 ```
-$ ./im.py examples/src/prog1.imp -t TA -i examples/tests/TA1.json
+$ ./im.py examples/src/prog1.imp -t TA -i examples/tests/prog1/TA_pass.json
 AllAssignmentsTest pass
 ```
  

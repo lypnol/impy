@@ -83,7 +83,8 @@ class ControlFlowGraph:
                     curr = child
         if return_state:
             return state
-        return path
+        path.append(' ')
+        return ''.join(path)
 
     def get_vars(self):
         catch_vars = []

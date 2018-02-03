@@ -32,19 +32,18 @@ class AllAssignmentsTest(Test):
         test_set = set()
         for condition in and_conditions:
             problem = Problem()
-            problem.addVariables(variables, [i for i in range(-100, 100)])
+            problem.addVariables(variables, [i for i in range(-1000, 1000)])
             if to_pass:
                 func = lambda *values: any(eval_path(path, variables, values) for path in condition)
             else:
                 func = lambda *values: all(not eval_path(path, variables, values) for path in condition)
             problem.addConstraint(func, variables)
-            solutions = problem.getSolutions()
-            solution = None if solutions == "null" else solutions[0]
+            solution = problem.getSolution()
             if to_pass:
                 if solution is None:
                     return None
                 test_set.add(frozenset(solution.items()))
-            elif solution:
+            elif solution is not None:
                 return [solution]
 
         return [{k: v for k, v in state} for state in test_set]
