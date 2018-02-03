@@ -6,6 +6,7 @@ import argparse
 import sys
 import json
 import time
+from copy import deepcopy
 # project
 from controlflow import ControlFlowGraph
 from test import *
@@ -33,8 +34,8 @@ def main():
     if (args.tests or args.all_tests) and not (args.generate_pass or args.generate_fail or args.input):
         return print("Cannot run tests without input states. Use -i, -gp or -gf flags.", file=sys.stderr)
 
-    if (args.generate_pass or args.generate_fail) and not args.tests:
-        return print("Generate flag can only be used with --test flag.", file=sys.stderr)    
+    if (args.generate_pass or args.generate_fail) and not (args.tests and len(args.tests) != 1):
+        return print("Generate flag can only be used with -t flag.", file=sys.stderr)    
 
     test_types = None
     if args.all_tests:
@@ -64,14 +65,14 @@ def main():
         elif args.generate_pass or args.generate_fail:
             coverage_test = tests[0]
             states = coverage_test.generate(graph, args.generate_pass, timeout=args.timeout)
-            return print(json.dumps(states, indent=2, sort_keys=True))
+            return print(json.dumps(states, indent=4, sort_keys=True))
         
         for coverage_test in tests:
-            passed = coverage_test.run(graph, states)
+            passed = coverage_test.run(graph, deepcopy(states))
             print(coverage_test, '{COLOR}{status}{ENDC}'.format(
                 COLOR=('\033[92m' if passed else '\033[91m'),
                 ENDC='\033[0m',
-                status=('pass' if passed else 'failed')
+                status=('pass' if passed else 'fail')
             ))
     else:
         state = {}

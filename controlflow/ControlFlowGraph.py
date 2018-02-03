@@ -120,13 +120,22 @@ class ControlFlowGraph:
     
     def get_labels(self, *classtypes):
         res = set()
+        if not classtypes:
+            classtypes = [StatementAssign, StatementIf, StatementSkip, StatementWhile]
         for label, statement in self.s.items():
-            if isinstance(statement, StatementAssign):
+            if any(isinstance(statement, statement_class) for statement_class in classtypes):
                 res.add(label)
         return res
 
     def get_edges_from(self, *classtypes):
-        raise NotImplementedError
+        res = set()
+        if not classtypes:
+            classtypes = [StatementAssign, StatementIf, StatementSkip, StatementWhile]
+        for u in self.g:
+            if any(isinstance(self.s[u], statement_class) for statement_class in classtypes):
+                for v, edge in self.g[u].items():
+                    res.add((u, v))
+        return res
 
     def get_paths(self, max_length=0, max_whiles=0):
         raise NotImplementedError
