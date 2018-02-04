@@ -1,5 +1,7 @@
-while !(x == y) {
-    if !(x <= y) {
+# Program that calculates GCD of x and y
+
+while x != y {
+    if x > y {
         x := x - y;
     } else {
         y := y-x;

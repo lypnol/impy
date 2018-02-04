@@ -29,7 +29,7 @@ class StatementSequence(Tree):
         while i < n:
             line = lines[i]
             splitted = line.split(':')
-            label = StatementSequence.get_new_label()
+            label = None
             if len(splitted) >= 2:
                 if splitted[1][0] != "=":
                     label, line = splitted[0], ":".join(splitted[1:])
@@ -39,6 +39,10 @@ class StatementSequence(Tree):
             if not line or line == ";" or line.startswith('#'):
                 i += 1
                 continue
+            
+            if not label:
+                label = StatementSequence.get_new_label()
+            
             # assignment
             if ':=' in line:
                 sequence.append(StatementAssign.parse(line.rstrip(';'), label=label))

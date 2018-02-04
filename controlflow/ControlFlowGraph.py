@@ -151,7 +151,13 @@ if __name__ == "__main__":
     import os.path
     from networkx.drawing.nx_agraph import graphviz_layout, to_agraph
 
-    source_path = "examples/src/prog1.imp" if len(sys.argv) < 2 else sys.argv[1]
+    if len(sys.argv) < 2:
+         print("Missing source file argument", file=sys.stderr)
+         exit(1)
+
+    source_path = sys.argv[1]
+    print(f"Loading {source_path}")
+    output = os.path.join(os.path.dirname(source_path), os.path.basename(source_path)+'.png')
     with open(source_path) as source_file:
         graph = ControlFlowGraph(source_file.read())
 
@@ -164,5 +170,5 @@ if __name__ == "__main__":
 
     A = to_agraph(G)
     A.layout('dot')
-    output = os.path.join(os.path.dirname(source_path), os.path.basename(source_path)+'.png')
     A.draw(output)
+    print(f"Control flow graph saved to {output}")

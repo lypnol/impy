@@ -1,0 +1,24 @@
+# Testing control flow graph construction
+
+0 : X := 2;
+1 : if (X <= 0) {
+    2 : X := -X;
+} else {
+    3 : X := 1 - X;
+}
+4 : if (X == 1) {
+    5 : X := 1;
+    6 : X := X + 1;
+}
+7 : Y := 5;
+8 : while Y + X >= X    
+{
+    9 : Y := X - Y;
+    10 : X := Y + X;
+    11 : if ((X < 2) && (1 >= 0)) || true {
+        12 : var := 4*3;
+        13: if X > 0 {
+            14: X := X;
+        }
+    }
+}

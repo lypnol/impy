@@ -8,7 +8,7 @@ import json
 import time
 from copy import deepcopy
 # project
-from controlflow import ControlFlowGraph
+from controlflow.ControlFlowGraph import ControlFlowGraph
 from test import *
 
 
