@@ -9,7 +9,7 @@ class Test:
     def run(self, graph, states):
         raise NotImplementedError
     
-    def generate(self, graph, to_pass, timeout=10):
+    def generate(self, graph, timeout=10):
         raise NotImplementedError
     
     def __repr__(self):

@@ -50,12 +50,12 @@ x: -3
 Run AllAssignmentsTest on prog1.imp:
 ```
 $ ./im.py examples/src/prog1.imp -t TA -i examples/tests/prog1/TA_pass.json
-AllAssignmentsTest pass
+AllAssignmentsTest  100.00%
 ```
- 
+
 Generate data set to pass AllAssignmentsTest for prog1
 ```
-$ ./im.py examples/src/prog1.imp -t TA -gp
+$ ./im.py examples/src/prog1.imp -t TA -g
 [
     {
         "x": 99

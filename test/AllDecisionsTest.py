@@ -13,16 +13,16 @@ from controlflow.utils import eval_path
 class AllDecisionsTest(Test):
 
     def run(self, graph, states):
+        expected = set(graph.get_edges_from(StatementIf, StatementWhile))
+        if not expected:
+            return 1
         edges = set()
         for state in states:
             path = graph.run(state)
             edges.update(set((path[i], path[i+1]) for i in range(len(path)-1)))
-        for (u, v) in graph.get_edges_from(StatementIf, StatementWhile):
-            if (u, v) not in edges:
-                return False
-        return True
+        return sum([1 for edge in edges if edge in expected]) / len(expected)
 
-    def generate(self, graph, to_pass, timeout=10):
+    def generate(self, graph, timeout=10):
         and_conditions = []
         for (u, v) in graph.get_edges_from(StatementIf, StatementWhile):
             or_condition = []
@@ -35,17 +35,11 @@ class AllDecisionsTest(Test):
         for condition in and_conditions:
             problem = Problem()
             problem.addVariables(variables, [i for i in range(-1000, 1000)])
-            if to_pass:
-                func = lambda *values: any(eval_path(path, variables, values) for path in condition)
-            else:
-                func = lambda *values: all(not eval_path(path, variables, values) for path in condition)
+            func = lambda *values: any(eval_path(path, variables, values) for path in condition)
             problem.addConstraint(func, variables)
             solution = problem.getSolution()
-            if to_pass:
-                if solution is None:
-                    return None
-                test_set.add(frozenset(solution.items()))
-            elif solution is not None:
-                return [solution]
+            if solution is None:
+                return None
+            test_set.add(frozenset(solution.items()))
 
         return [{k: v for k, v in state} for state in test_set]

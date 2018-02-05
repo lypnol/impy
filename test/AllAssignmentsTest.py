@@ -12,15 +12,15 @@ from controlflow.utils import eval_path
 class AllAssignmentsTest(Test):
 
     def run(self, graph, states):
+        expected = set(graph.get_labels(StatementAssign))
+        if not expected:
+            return 1
         paths = set()
         for state in states:
             paths.update(set(graph.run(state)))
-        for label in graph.get_labels(StatementAssign):
-            if label not in paths:
-                return False
-        return True
+        return sum([1 for label in paths if label in expected]) / len(expected)
 
-    def generate(self, graph, to_pass, timeout=10):
+    def generate(self, graph, timeout=10):
         and_conditions = []
         for u in graph.get_labels(StatementAssign):
             or_condition = []
@@ -33,17 +33,11 @@ class AllAssignmentsTest(Test):
         for condition in and_conditions:
             problem = Problem()
             problem.addVariables(variables, [i for i in range(-1000, 1000)])
-            if to_pass:
-                func = lambda *values: any(eval_path(path, variables, values) for path in condition)
-            else:
-                func = lambda *values: all(not eval_path(path, variables, values) for path in condition)
+            func = lambda *values: any(eval_path(path, variables, values) for path in condition)
             problem.addConstraint(func, variables)
             solution = problem.getSolution()
-            if to_pass:
-                if solution is None:
-                    return None
-                test_set.add(frozenset(solution.items()))
-            elif solution is not None:
-                return [solution]
+            if solution is None:
+                return None
+            test_set.add(frozenset(solution.items()))
 
         return [{k: v for k, v in state} for state in test_set]

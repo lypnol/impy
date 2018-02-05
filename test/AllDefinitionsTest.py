@@ -7,7 +7,7 @@ from test.Test import Test
 class AllDefinitionsTest(Test):
 
     def run(self, graph, states):
-        pass
+        raise NotImplementedError
 
-    def generate(self, graph, to_pass, timeout=10):
+    def generate(self, graph, timeout=10):
         raise NotImplementedError

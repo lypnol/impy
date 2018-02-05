@@ -11,11 +11,11 @@ class AllILoopsTest(Test):
         self.i = i
 
     def run(self, graph, states):
+        expected = set(graph.get_paths(max_whiles=self.i))
+        if not expected:
+            return 1
         paths = set(''.join(graph.run(state)) for state in states)
-        for path in graph.get_paths(max_whiles=self.i):
-            if path not in paths:
-                return False
-        return True
+        return sum([1 for path in paths if path in expected]) / len(expected)
 
-    def generate(self, graph, to_pass, timeout=10):
+    def generate(self, graph, timeout=10):
         raise NotImplementedError

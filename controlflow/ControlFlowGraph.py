@@ -135,10 +135,10 @@ class ControlFlowGraph:
         node = self.start if node is None else node
         if max_length == 0 or max_whiles == 0:
             return []
-        if isinstance(self.s[node], StatementWhile):
-            max_whiles -= 1
         if node == ' ':
             return [prefix]
+        if isinstance(self.s[node], StatementWhile):
+            max_whiles -= 1
         paths = []
         for v in self.g[node]:
             if v not in prefix:
