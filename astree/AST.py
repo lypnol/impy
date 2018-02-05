@@ -39,7 +39,7 @@ class AST(StatementSequence):
         i = 0
         while i < len(lines):
             line = lines[i].strip()
-            if line == '' or line == ';':
+            if not line:
                 i += 1
             elif line.startswith('if ') or line.startswith('while '):
                 j = i+1

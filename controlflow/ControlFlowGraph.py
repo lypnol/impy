@@ -1,6 +1,12 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
+# stdlib
+import sys
+# 3p
+import networkx as nx
+from networkx.drawing.nx_agraph import to_agraph
+# project
 from astree.AST import AST
 from astree.ExpArithmetic import ExpArithmetic
 from astree.ExpBoolean import ExpBoolean
@@ -53,7 +59,7 @@ class ControlFlowGraph:
                 if self.start is None:
                     self.start = current.label
 
-            if isinstance(current, StatementAssign):
+            if isinstance(current, StatementAssign) or isinstance(current, StatementSkip):
                 self.add_edge(current.label, goto, ExpBoolean("true"), current)
             
             elif isinstance(current, StatementIf):
@@ -72,18 +78,25 @@ class ControlFlowGraph:
                 
         return start_label
 
-    def run(self, state, return_state=False):
+    def run(self, state, return_state=False, max_length=-1, max_whiles=-1):
         curr = self.start
         path = []
         while curr != ' ':
+            if (max_length > -1) and len(path) == max_length:
+                break
+            if (max_whiles > -1) and (max_whiles == 0 and isinstance(self.s[curr], StatementWhile)):
+                break
             path.append(curr)
+            if isinstance(self.s[curr], StatementWhile):
+                max_whiles -= 1
             for child, (exp, statement) in self.g[curr].items():
                 if exp.eval(state):
                     statement.eval(state)
                     curr = child
+        if not ((max_length > -1) and len(path) == max_length):
+            path.append(curr)
         if return_state:
             return state
-        path.append(' ')
         return ''.join(path)
 
     def get_vars(self):
@@ -133,42 +146,29 @@ class ControlFlowGraph:
 
     def get_paths(self, max_length=-1, max_whiles=-1, node=None, prefix=''):
         node = self.start if node is None else node
-        if max_length == 0 or max_whiles == 0:
-            return []
+        prefix += node
         if node == ' ':
             return [prefix]
-        if isinstance(self.s[node], StatementWhile):
-            max_whiles -= 1
+        if max_length == 0 or max_whiles == 0:
+            return []
         paths = []
         for v in self.g[node]:
-            if v not in prefix:
-                paths.extend(self.get_paths(max_length-1, max_whiles, v, prefix+node))
+            if ((max_length <= -1 and max_whiles <= -1) and v not in prefix) or \
+            not (max_length <= -1 and max_whiles <= -1):
+                if isinstance(self.s[node], StatementWhile):
+                    max_whiles -= 1
+                paths.extend(self.get_paths(max_length-1, max_whiles, v, prefix))
         return paths
 
-if __name__ == "__main__":
-    import networkx as nx
-    import sys
-    import os.path
-    from networkx.drawing.nx_agraph import graphviz_layout, to_agraph
+    def output_graph(self, output):
+        G = nx.DiGraph()
+        for u in self.g:
+            G.add_node(u, label=u, fillcolor='white', labelfontsize=22)
+        for u, connections in self.g.items():
+            for v, edge in connections.items():
+                G.add_edge(u, v, label=f'{edge[0].to_exp()}\n{edge[1].to_exp()}', fontsize=9)
 
-    if len(sys.argv) < 2:
-         print("Missing source file argument", file=sys.stderr)
-         exit(1)
-
-    source_path = sys.argv[1]
-    print(f"Loading {source_path}")
-    output = os.path.join(os.path.dirname(source_path), os.path.basename(source_path)+'.png')
-    with open(source_path) as source_file:
-        graph = ControlFlowGraph(source_file.read())
-
-    G = nx.DiGraph()
-    for u in graph.g:
-        G.add_node(u, label=u, fillcolor='white', labelfontsize=22)
-    for u, connections in graph.g.items():
-        for v, edge in connections.items():
-            G.add_edge(u, v, label=f'{edge[0].to_exp()}\n{edge[1].to_exp()}', fontsize=9)
-
-    A = to_agraph(G)
-    A.layout('dot')
-    A.draw(output)
-    print(f"Control flow graph saved to {output}")
+        A = to_agraph(G)
+        A.layout('dot')
+        A.draw(output)
+        print(f"Control flow graph saved to {output}", file=sys.stderr)

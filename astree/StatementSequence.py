@@ -28,6 +28,10 @@ class StatementSequence(Tree):
         i = 0
         while i < n:
             line = lines[i]
+            if line.startswith('#'):
+                i += 1
+                continue
+
             splitted = line.split(':')
             label = None
             if len(splitted) >= 2:
@@ -35,16 +39,16 @@ class StatementSequence(Tree):
                     label, line = splitted[0], ":".join(splitted[1:])
                     label = label.strip()
             line = line.strip()
-
-            if not line or line == ";" or line.startswith('#'):
-                i += 1
-                continue
             
             if not label:
                 label = StatementSequence.get_new_label()
-            
+
+            # skip
+            if not line or line == ";":
+                sequence.append(StatementSkip(label=label))
+                i += 1
             # assignment
-            if ':=' in line:
+            elif ':=' in line:
                 sequence.append(StatementAssign.parse(line.rstrip(';'), label=label))
                 i += 1
             # if

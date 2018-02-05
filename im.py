@@ -27,6 +27,7 @@ def main():
     parser.add_argument("--timeout", help="States generation timeout (seconds)", type=int, default=10)
     parser.add_argument("--k-paths", help="Paramter of k-TC test", type=int, default=3)
     parser.add_argument("--i-loops", help="Paramter of i-TB test", type=int, default=1)
+    parser.add_argument("-cfg", "--controlflow", help="Output controlflow graph", type=str)
     args = parser.parse_args()
 
 
@@ -45,7 +46,9 @@ def main():
     graph = None
     with open(args.source) as source_file:
         graph = ControlFlowGraph(source_file.read())
-    # print(graph.source)
+    
+    if args.controlflow:
+        graph.output_graph(args.controlflow)
 
     if test_types:
         tests = []
