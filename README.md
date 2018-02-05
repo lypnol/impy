@@ -36,6 +36,20 @@ optional arguments:
   --i-loops I_LOOPS     Paramter of i-TB test
 ```
 
+## Coverage tests
+
+So far, here are the implemented coverage tests:
+
+| Test               	| Flag name 	| Runner 	| Generator 	|
+|--------------------	|-----------	|--------	|-----------	|
+| AllAssignmentsTest 	| TA        	| OK     	| OK        	|
+| AllDecisionsTest   	| TD        	| OK     	| OK        	|
+| AllConditionsTest  	| TC        	|        	|           	|
+| AllKPathsTest      	| k-TC      	| OK     	| OK        	|
+| AllILoopsTest      	| i-TB      	| OK     	| OK        	|
+| AllDefinitionsTest 	| TDef      	|        	|           	|
+| AllUsagesTest      	| TU        	|        	|           	|
+| AllDUPathsTests    	| TDU       	|        	|           	|
 ## Examples
 
 Run IMP program
