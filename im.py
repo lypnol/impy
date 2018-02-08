@@ -76,11 +76,12 @@ def main():
                 states = None
             return print(json.dumps(states, indent=4, sort_keys=True))
         
-        max_str_len = max(map(lambda x: len(f"[{x[0]}] {x[1]}"), tests.items()))
+        max_key_len = max(map(lambda x: len(str(x)), tests.keys()))
+        max_str_len = max(map(lambda x: len(str(x)), tests.values()))
         for test_name, coverage_test in tests.items():
             coverage = coverage_test.run(graph, deepcopy(states))
-            print(f"[{test_name}] {coverage_test}", 
-                ' '*(max_str_len-len(str(f"[{test_name}] {coverage_test}"))),
+            print(f"[{test_name}]", ' '*(max_key_len-len(test_name)),
+                coverage_test, ' '*(max_str_len-len(str(coverage_test))),
                 '{COLOR}{coverage:6.2f}%{ENDC}'.format(
                     COLOR=('\033[92m' if coverage == 1 else '\033[91m'),
                     ENDC='\033[0m',

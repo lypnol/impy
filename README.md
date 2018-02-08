@@ -98,7 +98,7 @@ Which will result in the following control flow graph
 
 ![Control Flow Graph for prog1](https://github.com/lypnol/impy/raw/master/examples/cfg/prog1.imp.png)
 
-Run TA, TD, TDef, k-TC (k = 7) and i-TB (i = 5) tests on prog2.imp against multiple test sets (as json files).
+Run TA, TD, TDef, k-TC (k = 7) and i-TB (i = 5) tests on prog2.imp against multiple test sets (as json files).  
 In this example, coverage tests are run against the merged test set of all given test sets, that's why all of them pass.
 ```
 $ ./im.py examples/src/prog2.imp \
@@ -108,11 +108,11 @@ $ ./im.py examples/src/prog2.imp \
     -i examples/tests/prog2/TDef_pass.json examples/tests/prog2/7-TC_pass.json examples/tests/prog2/5-TB_pass.json
 ```
 ```
-[TDef] AllDefinitionsTest   100.00%
-[TA] AllAssignmentsTest     100.00%
-[TD] AllDecisionsTest       100.00%
-[i-TB] AllILoopsTest (i=5)  100.00%
-[k-TC] AllKPathsTest (k=7)  100.00%
+[TDef]  AllDefinitionsTest   100.00%
+[TA]    AllAssignmentsTest   100.00%
+[TD]    AllDecisionsTest     100.00%
+[i-TB]  AllILoopsTest (i=5)  100.00%
+[k-TC]  AllKPathsTest (k=7)  100.00%
 ```
 
 Generate test set to pass TA, TD and TDef for prog1.imp
