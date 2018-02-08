@@ -9,7 +9,7 @@ class StatementSkip(Tree):
     def __init__(self, label=None):
         Tree.__init__(self, label=label)
 
-    def eval(self, state, catch_vars=None):
+    def eval(self, state, catch_vars=None, include_assign=False):
         pass
 
     def to_exp(self):

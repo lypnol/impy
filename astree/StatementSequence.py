@@ -87,6 +87,6 @@ class StatementSequence(Tree):
             ret += statement.__str__(level+1, i==len(self.sequence)-1)+("\n" if i < len(self.sequence)-1 else "")
         return ret
 
-    def eval(self, state, catch_vars=None):
+    def eval(self, state, catch_vars=None, include_assign=False):
         for statement in self.sequence:
-            statement.eval(state, catch_vars)
+            statement.eval(state, catch_vars, include_assign)

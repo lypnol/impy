@@ -20,12 +20,12 @@ class StatementIf(Tree):
             ret += "\n"+self.statement_f.__str__(level+1)
         return ret
 
-    def eval(self, state, catch_vars=None):
+    def eval(self, state, catch_vars=None, include_assign=False):
         if catch_vars is not None:
-            self.exp.eval(state, catch_vars)
-            self.statement_t.eval(state, catch_vars)
+            self.exp.eval(state, catch_vars, include_assign)
+            self.statement_t.eval(state, catch_vars, include_assign)
             if self.statement_f:
-                self.statement_f.eval(state, catch_vars)
+                self.statement_f.eval(state, catch_vars, include_assign)
             return
         if self.exp.eval(state):
             self.statement_t.eval(state)

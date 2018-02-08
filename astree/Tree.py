@@ -16,5 +16,5 @@ class Tree:
     def __str__(self, level=0, last=True):
         return "    "*level+(f'({self.label}) ' if self.label else '')+self.__class__.__name__
 
-    def eval(self, state, catch_vars=None):
+    def eval(self, state, catch_vars=None, include_assign=False):
         raise NotImplementedError

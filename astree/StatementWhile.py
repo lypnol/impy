@@ -17,10 +17,10 @@ class StatementWhile(Tree):
         ret += self.statement.__str__(level+1)
         return ret
 
-    def eval(self, state, catch_vars=None):
+    def eval(self, state, catch_vars=None, include_assign=False):
         if catch_vars is not None:
-            self.exp.eval(state, catch_vars)
-            self.statement.eval(state, catch_vars)
+            self.exp.eval(state, catch_vars, include_assign)
+            self.statement.eval(state, catch_vars, include_assign)
             return
         while self.exp.eval(state):
             self.statement.eval(state)

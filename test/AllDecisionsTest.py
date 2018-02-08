@@ -34,7 +34,7 @@ class AllDecisionsTest(Test):
         test_set = set()
         for condition in and_conditions:
             problem = Problem()
-            problem.addVariables(variables, [i for i in range(-1000, 1000)])
+            problem.addVariables(variables, range(-100, 100))
             func = lambda *values: any(eval_path(path, variables, values) for path in condition)
             problem.addConstraint(func, variables)
             solution = problem.getSolution()

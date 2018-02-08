@@ -81,7 +81,7 @@ class ExpBoolean(Tree):
             ret += "\n" + self.right.__str__(level+1)
         return ret
 
-    def eval(self, state, catch_vars=None):
+    def eval(self, state, catch_vars=None, include_assign=False):
         if self.op in BINOP+UNAOP and catch_vars is not None:
             self.left.eval(state, catch_vars)
             if self.op in BINOP:

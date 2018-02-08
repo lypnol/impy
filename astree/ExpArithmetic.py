@@ -22,7 +22,7 @@ class ExpArithmetic(Tree):
             opening, closing = find_bloc_brackets(expression, bracket='(')
             if closing == -1:
                 raise InvalidArithmeticExpression(f'Invalid arithmetic expression {expression}')
-            if closing == len(expression):
+            if closing == len(expression)-1:
                 return ExpArithmetic.parse(expression[opening+1:closing])
             op = expression[closing+1]
             if op not in BINOP:
@@ -53,7 +53,7 @@ class ExpArithmetic(Tree):
             ret += "\n" + self.right.__str__(level+1)
         return ret
 
-    def eval(self, state, catch_vars=None):
+    def eval(self, state, catch_vars=None, include_assign=False):
         if self.op in BINOP+UNAOP and catch_vars is not None:
             self.left.eval(state, catch_vars)
             if self.right:

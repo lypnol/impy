@@ -44,6 +44,9 @@ class ControlFlowGraph:
         else:
             self.p[b].append(a)
 
+    def get_statement(self, u):
+        return self.s[u]
+
     def get_edge(self, u, v):
         return self.g[u][v]
 
@@ -97,11 +100,11 @@ class ControlFlowGraph:
             path.append(curr)
         if return_state:
             return state
-        return ''.join(path)
+        return tuple(path)
 
-    def get_vars(self):
+    def get_vars(self, include_assign=False):
         catch_vars = []
-        self.ast.eval({}, catch_vars=catch_vars)
+        self.ast.eval({}, catch_vars=catch_vars, include_assign=include_assign)
         return set(catch_vars)
     
     def get_labels(self, *classtypes):
@@ -134,21 +137,21 @@ class ControlFlowGraph:
                     res.add((p, u))
         return res
 
-    def get_paths_to(self, node, suffix=''):
-        suffix = node+suffix
+    def get_paths_to(self, node, suffix=[]):
+        suffix = [node]+suffix
         if node not in self.p or node == self.start:
-            return [suffix]
+            return [tuple(suffix)]
         paths = []
         for parent in self.p[node]:
             if parent not in suffix:
                 paths.extend(self.get_paths_to(parent, suffix))
         return paths
 
-    def get_paths(self, max_length=-1, max_whiles=-1, node=None, prefix=''):
+    def get_paths(self, max_length=-1, max_whiles=-1, node=None, prefix=[]):
         node = self.start if node is None else node
-        prefix += node
+        prefix = prefix+[node]
         if node == ' ':
-            return [prefix]
+            return [tuple(prefix)]
         if max_length == 0 or max_whiles == 0:
             return []
         paths = []
@@ -159,6 +162,20 @@ class ControlFlowGraph:
                     max_whiles -= 1
                 paths.extend(self.get_paths(max_length-1, max_whiles, v, prefix))
         return paths
+
+    def is_def(self, u, x):
+        statement = self.s[u]
+        return isinstance(statement, StatementAssign) and statement.var == x
+
+    def ref(self, u):
+        statement = self.s[u]
+        catched_vars = []
+        if isinstance(statement, StatementWhile) or isinstance(statement, StatementIf):
+            statement.exp.eval({}, catched_vars)
+        elif isinstance(statement, StatementAssign):
+            statement.arithmetic_exp.eval({}, catched_vars)
+
+        return set(catched_vars)
 
     def output_graph(self, output):
         G = nx.DiGraph()

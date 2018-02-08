@@ -15,10 +15,10 @@ class AllAssignmentsTest(Test):
         expected = set(graph.get_labels(StatementAssign))
         if not expected:
             return 1
-        paths = set()
+        labels = set()
         for state in states:
-            paths.update(set(graph.run(state)))
-        return sum([1 for label in paths if label in expected]) / len(expected)
+            labels.update(set(graph.run(state)))
+        return sum([1 for label in labels if label in expected]) / len(expected)
 
     def generate(self, graph, timeout=10):
         and_conditions = []
@@ -32,7 +32,7 @@ class AllAssignmentsTest(Test):
         test_set = set()
         for condition in and_conditions:
             problem = Problem()
-            problem.addVariables(variables, [i for i in range(-1000, 1000)])
+            problem.addVariables(variables, range(-100, 100))
             func = lambda *values: any(eval_path(path, variables, values) for path in condition)
             problem.addConstraint(func, variables)
             solution = problem.getSolution()

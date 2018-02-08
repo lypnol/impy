@@ -24,7 +24,9 @@ class StatementAssign(Tree):
         ret += self.arithmetic_exp.__str__(level+1)
         return ret
 
-    def eval(self, state, catch_vars=None):
+    def eval(self, state, catch_vars=None, include_assign=False):
+        if (catch_vars is not None and include_assign):
+            catch_vars.append(self.var)
         state[self.var] = self.arithmetic_exp.eval(state, catch_vars)
 
     def to_exp(self):

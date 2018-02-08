@@ -1,11 +1,8 @@
-if (x >= 0) 
-&& (x+1 == 5) {
-  x := x + 1;
-    } else {
-   x := x - 1;
- y  :=    3;
-    }
+# Program factorial of x
 
-while (x <= 0) {
-       x := x + 1;
+i := 1;
+f := 1;
+while i != (x + 1) {
+  i := i + 1;
+  f := f * i;
 }
