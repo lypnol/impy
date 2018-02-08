@@ -48,7 +48,7 @@ So far, here are the implemented coverage tests:
 | AllConditionsTest  	| TC        	|        	|           	|
 | AllKPathsTest      	| k-TC      	| OK     	| OK        	|
 | AllILoopsTest      	| i-TB      	| OK     	| OK        	|
-| AllDefinitionsTest 	| TDef      	|        	|           	|
+| AllDefinitionsTest 	| TDef      	| OK     	| OK        	|
 | AllUsagesTest      	| TU        	|        	|           	|
 | AllDUPathsTests    	| TDU       	|        	|           	|
 
