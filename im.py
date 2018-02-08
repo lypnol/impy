@@ -21,7 +21,7 @@ def main():
     group.add_argument("--all-tests", help="Runs all available coverage tests", action="store_true")
     
     group = parser.add_mutually_exclusive_group()
-    group.add_argument("-i", "--input", help="Input state set for tests (json file)", type=str)
+    group.add_argument("-i", "--input", nargs="+", help="Input state set for tests (json files)", type=str)
     group.add_argument("-g", "--generate", help="Generate state set that passes coverage tests", action="store_true")
 
     parser.add_argument("--timeout", help="States generation timeout (seconds)", type=int, default=10)
@@ -61,9 +61,11 @@ def main():
                 obj = test_type()
             tests.append(obj)
         
+        states = []
         if args.input:
-            with open(args.input) as json_file:
-                states = json.load(json_file)
+            for input_file in args.input:
+                with open(input_file) as json_file:
+                    states.extend(json.load(json_file))
         elif args.generate:
             coverage_test = tests[0]
             states = coverage_test.generate(graph, timeout=args.timeout)

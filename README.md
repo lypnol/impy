@@ -12,8 +12,8 @@ pip3 install -r requirements.txt
 
 ```
 usage: im.py [-h]
-             [-t {TA,TD,TC,k-TC,i-TB,TDef,TU,TDU} [{TA,TD,TC,k-TC,i-TB,TDef,TU,TDU} ...]
-             | --all-tests] [-i INPUT | -g] [--timeout TIMEOUT]
+             [-t {TA,TD,TC,k-TC,i-TB,TDef,TU,TDU} [{TA,TD,TC,k-TC,i-TB,TDef,TU,TDU} ...] | --all-tests]
+             [-i INPUT [INPUT ...] | -g] [--timeout TIMEOUT]
              [--k-paths K_PATHS] [--i-loops I_LOOPS] [-cfg CONTROLFLOW]
              source
 
@@ -27,8 +27,8 @@ optional arguments:
   -t {TA,TD,TC,k-TC,i-TB,TDef,TU,TDU} [{TA,TD,TC,k-TC,i-TB,TDef,TU,TDU} ...]
                         Runs specific coverage tests
   --all-tests           Runs all available coverage tests
-  -i INPUT, --input INPUT
-                        Input state set for tests (json file)
+  -i INPUT [INPUT ...], --input INPUT [INPUT ...]
+                        Input state set for tests (json files)
   -g, --generate        Generate state set that passes coverage tests
   --timeout TIMEOUT     States generation timeout (seconds)
   --k-paths K_PATHS     Paramter of k-TC test
@@ -68,10 +68,15 @@ Which will result in the following control flow graph
 
 ![Control Flow Graph for prog1](https://github.com/lypnol/impy/raw/master/examples/cfg/prog1.imp.png)
 
-Run AllAssignmentsTest on prog1.imp:
+Run TA, TD, TDef, k-TC (k = 7) and i-TB (i = 5) tests on prog1.imp against multiple test sets (as json files).
+In this example, coverage tests are run against the merged test set of all given test sets, that's why all of them pass.
 ```
-$ ./im.py examples/src/prog1.imp -t TA -i examples/tests/prog1/TA_pass.json
+$ ./im.py examples/src/prog2.imp -t TDef TA TD i-TB k-TC --i-loops 5 --k-paths 7 -i examples/tests/prog2/TDef_pass.json examples/tests/prog2/7-TC_pass.json examples/tests/prog2/5-TB_pass.json
+AllDefinitionsTest  100.00%
 AllAssignmentsTest  100.00%
+AllDecisionsTest    100.00%
+AllILoopsTest       100.00%
+AllKPathsTest       100.00%
 ```
 
 Generate data set to pass AllAssignmentsTest for prog1

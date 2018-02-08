@@ -18,7 +18,7 @@ class AllILoopsTest(Test):
         expected = set(graph.get_paths(max_whiles=self.i))
         if not expected:
             return 1
-        paths = set(''.join(graph.run(state, max_whiles=self.i+1)) for state in states)
+        paths = set(graph.run(state, max_whiles=self.i+1) for state in states)
         return sum([1 for path in paths if path in expected]) / len(expected)
 
     def generate(self, graph, timeout=10):
