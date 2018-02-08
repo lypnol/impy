@@ -14,6 +14,9 @@ class AllILoopsTest(Test):
         Test.__init__(self)
         self.i = i
 
+    def __str__(self):
+        return Test.__str__(self) + f" (i={self.i})"
+
     def run(self, graph, states):
         expected = set(graph.get_paths(max_whiles=self.i))
         if not expected:

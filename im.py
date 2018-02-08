@@ -34,11 +34,11 @@ def main():
     if (args.tests or args.all_tests) and not (args.generate or args.input):
         return print("Cannot run tests without input states. Use -i or -g flag.", file=sys.stderr)
 
-    test_types = None
+    test_classes = {}
     if args.all_tests:
-        test_types = list(TESTS.values())
+        test_classes = TESTS
     elif args.tests:
-        test_types = [TESTS[t] for t in args.tests]
+        test_classes = {t: TESTS[t] for t in args.tests}
     
     graph = None
     with open(args.source) as source_file:
@@ -47,17 +47,17 @@ def main():
     if args.controlflow:
         graph.output_graph(args.controlflow)
 
-    if test_types:
-        tests = []
-        for test_type in test_types:
-            if test_type == AllKPathsTest:
+    if test_classes:
+        tests = {}
+        for key, test_class in test_classes.items():
+            if test_class == AllKPathsTest:
                 obj = AllKPathsTest(args.k_paths)
-            elif test_type == AllILoopsTest:
+            elif test_class == AllILoopsTest:
                 obj = AllILoopsTest(args.i_loops)
             else:
-                obj = test_type()
-            tests.append(obj)
-        
+                obj = test_class()
+            tests[key] = obj
+
         states = []
         if args.input:
             for input_file in args.input:
@@ -67,7 +67,7 @@ def main():
                         states.extend(test_set)
             states = merge_states(states)
         elif args.generate:
-            for coverage_test in tests:
+            for coverage_test in tests.values():
                 test_set = coverage_test.generate(graph, timeout=args.timeout)
                 if test_set is not None:
                     states.extend(test_set)
@@ -76,11 +76,11 @@ def main():
                 states = None
             return print(json.dumps(states, indent=4, sort_keys=True))
         
-        for coverage_test in tests:
+        max_str_len = max(map(lambda x: len(f"[{x[0]}] {x[1]}"), tests.items()))
+        for test_name, coverage_test in tests.items():
             coverage = coverage_test.run(graph, deepcopy(states))
-            max_str_len = max(map(lambda x: len(str(x)), tests))
-            print(coverage_test, 
-                ' '*(max_str_len-len(str(coverage_test))),
+            print(f"[{test_name}] {coverage_test}", 
+                ' '*(max_str_len-len(str(f"[{test_name}] {coverage_test}"))),
                 '{COLOR}{coverage:6.2f}%{ENDC}'.format(
                     COLOR=('\033[92m' if coverage == 1 else '\033[91m'),
                     ENDC='\033[0m',

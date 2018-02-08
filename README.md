@@ -80,26 +80,13 @@ Boolean expressions can be constructed with operators: `&&`, `||`, `!`, `<=`, `<
 ### Comments
 Comments can be added starting with `#` character.
 
-## Coverage tests
-
-So far, here are the implemented coverage tests:
-
-| Test               	| Flag name 	| Runner 	| Generator 	|
-|--------------------	|-----------	|--------	|-----------	|
-| AllAssignmentsTest 	| TA        	| OK     	| OK        	|
-| AllDecisionsTest   	| TD        	| OK     	| OK        	|
-| AllConditionsTest  	| TC        	| OK       	| OK          	|
-| AllKPathsTest      	| k-TC      	| OK     	| OK        	|
-| AllILoopsTest      	| i-TB      	| OK     	| OK        	|
-| AllDefinitionsTest 	| TDef      	| OK     	| OK        	|
-| AllUsagesTest      	| TU        	| OK       	| OK          	|
-| AllDUPathsTests    	| TDU       	|        	|           	|
-
 ## Examples
 
 Run IMP program and output its control flow graph
 ```
 $ ./im.py examples/src/prog1.imp -cfg examples/cfg/prog1.imp.png
+```
+```
 Control flow graph saved to examples/cfg/prog1.imp.png
 Enter initial state
 x: 5
@@ -119,16 +106,20 @@ $ ./im.py examples/src/prog2.imp \
     --i-loops 5 \
     --k-paths 7 \
     -i examples/tests/prog2/TDef_pass.json examples/tests/prog2/7-TC_pass.json examples/tests/prog2/5-TB_pass.json
-AllDefinitionsTest  100.00%
-AllAssignmentsTest  100.00%
-AllDecisionsTest    100.00%
-AllILoopsTest       100.00%
-AllKPathsTest       100.00%
+```
+```
+[TDef] AllDefinitionsTest   100.00%
+[TA] AllAssignmentsTest     100.00%
+[TD] AllDecisionsTest       100.00%
+[i-TB] AllILoopsTest (i=5)  100.00%
+[k-TC] AllKPathsTest (k=7)  100.00%
 ```
 
 Generate test set to pass TA, TD and TDef for prog1.imp
 ```
 $ ./im.py examples/src/prog1.imp -t TA TD TDef -g
+```
+```
 [
     {
         "x": 99

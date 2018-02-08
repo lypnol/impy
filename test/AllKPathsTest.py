@@ -14,6 +14,9 @@ class AllKPathsTest(Test):
         Test.__init__(self)
         self.k = k
 
+    def __str__(self):
+        return Test.__str__(self) + f" (k={self.k})"
+
     def run(self, graph, states):
         expected = set(graph.get_paths(max_length=self.k))
         if not expected:
