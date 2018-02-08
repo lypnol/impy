@@ -37,6 +37,49 @@ optional arguments:
                         Output controlflow graph
 ```
 
+## IMP language syntax
+
+### Assignment
+
+To assign some value to a variable `x` use `:=` operator
+```
+x := 1 + y + 2 * (z - t) % x;
+```
+
+### Control Flow - if
+
+```
+if (x > 3) || !(x + y <= 3) {
+    ...
+} else {
+    ...
+}
+```
+
+The curly brackets `{` `}` are not optionnal, but you can omit the `else` bloc if not needed.
+
+### Control Flow - while
+
+```
+while (x <= n) {
+    x += 1;
+}
+```
+
+Again, curly brackets `{` `}` are not optionnal.
+
+### Expressions
+
+**Arithmetic**  
+You can use arithmetic expressions with the following operatiors: `+`, `-`, `*` and `%`.  
+The division operator is not available to avoid division by 0 errors.
+
+**Boolean**
+Boolean expressions can be constructed with operators: `&&`, `||`, `!`, `<=`, `<`, `>`, `>=`, `==`, `!=`.  
+
+### Comments
+Comments can be added starting with `#` character.
+
 ## Coverage tests
 
 So far, here are the implemented coverage tests:
