@@ -135,8 +135,18 @@ class ExpBoolean(Tree):
         exp = exp.replace('&&', 'and')
         exp = exp.replace('!(', 'not (')
         if exp == "true":
-            return lambda: True, []
+            return lambda *x: True, []
         elif exp == "false":
-            return lambda: False, []
+            return lambda *x: False, []
         func = lambda *x: eval(replace_all_vars(exp, catch_vars, *x))
         return func, catch_vars
+
+    def get_conditions(self):
+        conditions = []
+        if self.op in BINOP_BOOL + UNAOP:
+            conditions.extend(self.left.get_conditions())
+            if self.right is not None:
+                conditions.extend(self.right.get_conditions())
+        elif self.op in BINOP_ARIT:
+            return [self]
+        return conditions

@@ -45,7 +45,7 @@ So far, here are the implemented coverage tests:
 |--------------------	|-----------	|--------	|-----------	|
 | AllAssignmentsTest 	| TA        	| OK     	| OK        	|
 | AllDecisionsTest   	| TD        	| OK     	| OK        	|
-| AllConditionsTest  	| TC        	|        	|           	|
+| AllConditionsTest  	| TC        	| OK       	| OK          	|
 | AllKPathsTest      	| k-TC      	| OK     	| OK        	|
 | AllILoopsTest      	| i-TB      	| OK     	| OK        	|
 | AllDefinitionsTest 	| TDef      	| OK     	| OK        	|
