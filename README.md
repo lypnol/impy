@@ -74,7 +74,7 @@ Again, curly brackets `{` `}` are not optionnal.
 You can use arithmetic expressions with the following operatiors: `+`, `-`, `*` and `%`.  
 The division operator is not available to avoid division by 0 errors.
 
-**Boolean**
+**Boolean**  
 Boolean expressions can be constructed with operators: `&&`, `||`, `!`, `<=`, `<`, `>`, `>=`, `==`, `!=`.  
 
 ### Comments
