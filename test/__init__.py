@@ -10,6 +10,7 @@ from test.AllILoopsTest import AllILoopsTest
 from test.AllKPathsTest import AllKPathsTest
 from test.AllUsagesTest import AllUsagesTest
 from test.AllDUPathsTests import AllDUPathsTests
+from test.utils import merge_states
 
 TESTS = {
     'TA': AllAssignmentsTest,

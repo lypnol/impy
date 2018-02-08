@@ -31,7 +31,7 @@ class AllDefinitionsTest(Test):
         all_possible_paths = set()
         for path_from_u in paths_from_u_satifiying:
             for path_to_u in graph.get_paths_to(u):
-                all_possible_paths.add(path_to_u[:-1]+path_from_u)
+                all_possible_paths.add(tuple(list(path_to_u[:-1])+list(path_from_u)))
         return all_possible_paths
 
     def run(self, graph, states):

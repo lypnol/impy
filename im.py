@@ -25,17 +25,14 @@ def main():
     group.add_argument("-g", "--generate", help="Generate state set that passes coverage tests", action="store_true")
 
     parser.add_argument("--timeout", help="States generation timeout (seconds)", type=int, default=10)
-    parser.add_argument("--k-paths", help="Paramter of k-TC test", type=int, default=3)
-    parser.add_argument("--i-loops", help="Paramter of i-TB test", type=int, default=1)
+    parser.add_argument("--k-paths", help="Paramter of k-TC test (default 4)", type=int, default=4)
+    parser.add_argument("--i-loops", help="Paramter of i-TB test (default 2)", type=int, default=2)
     parser.add_argument("-cfg", "--controlflow", help="Output controlflow graph", type=str)
     args = parser.parse_args()
 
 
     if (args.tests or args.all_tests) and not (args.generate or args.input):
         return print("Cannot run tests without input states. Use -i or -g flag.", file=sys.stderr)
-
-    if args.generate and not (args.tests and len(args.tests) == 1):
-        return print("Generate flag can only be used with -t flag.", file=sys.stderr)    
 
     test_types = None
     if args.all_tests:
@@ -65,10 +62,18 @@ def main():
         if args.input:
             for input_file in args.input:
                 with open(input_file) as json_file:
-                    states.extend(json.load(json_file))
+                    test_set = json.load(json_file)
+                    if test_set is not None:
+                        states.extend(test_set)
+            states = merge_states(states)
         elif args.generate:
-            coverage_test = tests[0]
-            states = coverage_test.generate(graph, timeout=args.timeout)
+            for coverage_test in tests:
+                test_set = coverage_test.generate(graph, timeout=args.timeout)
+                if test_set is not None:
+                    states.extend(test_set)
+            states = merge_states(states)
+            if not states:
+                states = None
             return print(json.dumps(states, indent=4, sort_keys=True))
         
         for coverage_test in tests:

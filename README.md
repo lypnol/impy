@@ -31,8 +31,8 @@ optional arguments:
                         Input state set for tests (json files)
   -g, --generate        Generate state set that passes coverage tests
   --timeout TIMEOUT     States generation timeout (seconds)
-  --k-paths K_PATHS     Paramter of k-TC test
-  --i-loops I_LOOPS     Paramter of i-TB test
+  --k-paths K_PATHS     Paramter of k-TC test (default 4)
+  --i-loops I_LOOPS     Paramter of i-TB test (default 2)
   -cfg CONTROLFLOW, --controlflow CONTROLFLOW
                         Output controlflow graph
 ```
@@ -49,7 +49,7 @@ So far, here are the implemented coverage tests:
 | AllKPathsTest      	| k-TC      	| OK     	| OK        	|
 | AllILoopsTest      	| i-TB      	| OK     	| OK        	|
 | AllDefinitionsTest 	| TDef      	| OK     	| OK        	|
-| AllUsagesTest      	| TU        	|        	|           	|
+| AllUsagesTest      	| TU        	| OK       	| OK          	|
 | AllDUPathsTests    	| TDU       	|        	|           	|
 
 ## Examples
@@ -68,7 +68,7 @@ Which will result in the following control flow graph
 
 ![Control Flow Graph for prog1](https://github.com/lypnol/impy/raw/master/examples/cfg/prog1.imp.png)
 
-Run TA, TD, TDef, k-TC (k = 7) and i-TB (i = 5) tests on prog1.imp against multiple test sets (as json files).
+Run TA, TD, TDef, k-TC (k = 7) and i-TB (i = 5) tests on prog2.imp against multiple test sets (as json files).
 In this example, coverage tests are run against the merged test set of all given test sets, that's why all of them pass.
 ```
 $ ./im.py examples/src/prog2.imp -t TDef TA TD i-TB k-TC --i-loops 5 --k-paths 7 -i examples/tests/prog2/TDef_pass.json examples/tests/prog2/7-TC_pass.json examples/tests/prog2/5-TB_pass.json
@@ -79,9 +79,9 @@ AllILoopsTest       100.00%
 AllKPathsTest       100.00%
 ```
 
-Generate data set to pass AllAssignmentsTest for prog1
+Generate test set to pass TA, TD and TDef for prog1.imp
 ```
-$ ./im.py examples/src/prog1.imp -t TA -g
+$ ./im.py examples/src/prog1.imp -t TA TD TDef -g
 [
     {
         "x": 99
