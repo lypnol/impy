@@ -71,7 +71,11 @@ Which will result in the following control flow graph
 Run TA, TD, TDef, k-TC (k = 7) and i-TB (i = 5) tests on prog2.imp against multiple test sets (as json files).
 In this example, coverage tests are run against the merged test set of all given test sets, that's why all of them pass.
 ```
-$ ./im.py examples/src/prog2.imp -t TDef TA TD i-TB k-TC --i-loops 5 --k-paths 7 -i examples/tests/prog2/TDef_pass.json examples/tests/prog2/7-TC_pass.json examples/tests/prog2/5-TB_pass.json
+$ ./im.py examples/src/prog2.imp \
+    -t TDef TA TD i-TB k-TC \
+    --i-loops 5 \
+    --k-paths 7 \
+    -i examples/tests/prog2/TDef_pass.json examples/tests/prog2/7-TC_pass.json examples/tests/prog2/5-TB_pass.json
 AllDefinitionsTest  100.00%
 AllAssignmentsTest  100.00%
 AllDecisionsTest    100.00%
