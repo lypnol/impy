@@ -4,7 +4,7 @@
 from astree.Tree import Tree
 from astree.ExpArithmetic import ExpArithmetic
 
-
+# Assignment statement
 class StatementAssign(Tree):
 
     @staticmethod
@@ -16,8 +16,8 @@ class StatementAssign(Tree):
 
     def __init__(self, var, arithmetic_exp, label=None):
         Tree.__init__(self, label=label)
-        self.var = var
-        self.arithmetic_exp = arithmetic_exp
+        self.var = var                          # variable name to assign str
+        self.arithmetic_exp = arithmetic_exp    # arithmetic assignment expression ExpArithmetic obj
 
     def __str__(self, level=0, last=True):
         ret = Tree.__str__(self, level, last)+f" [{self.var}]"+"\n"
@@ -29,5 +29,6 @@ class StatementAssign(Tree):
             catch_vars.append(self.var)
         state[self.var] = self.arithmetic_exp.eval(state, catch_vars)
 
+    # returns string format of expression
     def to_exp(self):
         return f'{self.var} := {self.arithmetic_exp.to_exp()}'

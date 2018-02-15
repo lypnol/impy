@@ -5,9 +5,7 @@ import re
 from astree.StatementSequence import StatementSequence
 
 
-"""
-AST represents a program's abstract syntax tree
-"""
+# AST represents a program's abstract syntax tree
 class AST(StatementSequence):
 
     @staticmethod

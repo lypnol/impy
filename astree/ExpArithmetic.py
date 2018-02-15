@@ -10,6 +10,7 @@ UNAOP = ['-']
 
 class InvalidArithmeticExpression(Exception): pass
 
+# Arithmetic expression tree node
 class ExpArithmetic(Tree):
     
     @staticmethod
@@ -79,6 +80,7 @@ class ExpArithmetic(Tree):
                 return
             return state[self.op]
 
+    # returns string format of expression
     def to_exp(self):
         if self.left and self.right:
             return f"({self.left.to_exp()} {self.op} {self.right.to_exp()})"

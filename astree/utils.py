@@ -2,6 +2,10 @@
 # -*- coding: utf-8 -*-
 
 
+# finds indexes of opening and closing brackets in a string
+# :param lines: iterable of str
+# :param start=0: starting index
+# :param bracket='{': bracket carachter, either '{', '(' or '['
 def find_bloc_brackets(lines, start=0, bracket='{'):
     opposit = {
         '{': '}',
@@ -23,8 +27,3 @@ def find_bloc_brackets(lines, start=0, bracket='{'):
                 closing_idx = i
                 return openning_idx+start, closing_idx+start
     return -1, -1
-
-def replace_all_vars(exp, catch_vars, *val):
-    for i, v in enumerate(val):
-        exp = exp.replace(f'{catch_vars[i]}', str(v))
-    return exp

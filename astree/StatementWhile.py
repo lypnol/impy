@@ -3,13 +3,13 @@
 
 from astree.Tree import Tree
 
-
+# While statement
 class StatementWhile(Tree):
 
     def __init__(self, exp, statement, label=None):
         Tree.__init__(self, label=label)
-        self.exp = exp
-        self.statement = statement
+        self.exp = exp              # boolean expression ExpBool
+        self.statement = statement  # sequence statement StatementSequence
 
     def __str__(self, level=0, last=True):
         ret = Tree.__str__(self, level, last)+"\n"

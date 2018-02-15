@@ -3,7 +3,7 @@
 
 from astree.Tree import Tree
 
-
+# Skip statement
 class StatementSkip(Tree):
 
     def __init__(self, label=None):

@@ -9,7 +9,7 @@ from astree.StatementWhile import StatementWhile
 from astree.StatementSkip import StatementSkip
 from astree.utils import find_bloc_brackets
 
-
+# Sequence statement, succession of statements
 class StatementSequence(Tree):
 
     LABEL = 0
@@ -79,7 +79,7 @@ class StatementSequence(Tree):
 
     def __init__(self, sequence):
         Tree.__init__(self)
-        self.sequence = sequence
+        self.sequence = sequence        # list of Statement obj
 
     def __str__(self, level=0, last=True):
         ret = Tree.__str__(self, level, last)+"\n"

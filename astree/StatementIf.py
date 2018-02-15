@@ -3,14 +3,14 @@
 
 from astree.Tree import Tree
 
-
+# If Statement
 class StatementIf(Tree):
     
     def __init__(self, exp, statement_t, statement_f, label=None):
         Tree.__init__(self, label=label)
-        self.exp = exp
-        self.statement_t = statement_t
-        self.statement_f = statement_f
+        self.exp = exp                  # ExpBool obj
+        self.statement_t = statement_t  # statement to execute if expression is true SequenceStatement obj
+        self.statement_f = statement_f  # statement to execute if expression is false (optional) SequenceStatement obj
 
     def __str__(self, level=0, last=True):
         ret = Tree.__str__(self, level, last)+"\n"

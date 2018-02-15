@@ -3,7 +3,7 @@
 
 from astree.Tree import Tree
 from astree.ExpArithmetic import ExpArithmetic
-from astree.utils import find_bloc_brackets, replace_all_vars
+from astree.utils import find_bloc_brackets
 
 
 BINOP_BOOL = ['||', '&&']
@@ -15,6 +15,7 @@ UNAOP = ['!']
 
 class InvalidBooleanExpression(Exception): pass
 
+# Boolean expression tree node
 class ExpBoolean(Tree):
 
     @staticmethod
@@ -69,9 +70,9 @@ class ExpBoolean(Tree):
 
     def __init__(self, op, left=None, right=None):
         Tree.__init__(self)
-        self.op = op
-        self.left = left
-        self.right = right
+        self.op = op            # operator or variable str
+        self.left = left        # left node ExpBool obj
+        self.right = right      # right node ExpBool obj
 
     def __str__(self, level=0, last=True):
         ret = Tree.__str__(self, level, last)+ " [" + self.op + "]"
@@ -116,9 +117,11 @@ class ExpBoolean(Tree):
                 return
             return state[self.op]
 
+    # returns opposit boolean expression begining with "!" operator
     def opposit(self):
         return ExpBoolean('!', self)
 
+    # returns string format of expression
     def to_exp(self):
         if self.left and self.right:
             return f"({self.left.to_exp()} {self.op} {self.right.to_exp()})"
@@ -126,21 +129,7 @@ class ExpBoolean(Tree):
             return f"{self.op}({self.left.to_exp()})"
         return self.op
 
-    def to_func(self):
-        catch_vars = []
-        self.eval({}, catch_vars=catch_vars)
-        catch_vars = sorted(set(catch_vars))
-        exp = self.to_exp()
-        exp = exp.replace('||', 'or')
-        exp = exp.replace('&&', 'and')
-        exp = exp.replace('!(', 'not (')
-        if exp == "true":
-            return lambda *x: True, []
-        elif exp == "false":
-            return lambda *x: False, []
-        func = lambda *x: eval(replace_all_vars(exp, catch_vars, *x))
-        return func, catch_vars
-
+    # returns list of elementary conditions in expression
     def get_conditions(self):
         conditions = []
         if self.op in BINOP_BOOL + UNAOP:

@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
+# main executable script
+
 # stdlib
 import argparse
 import sys
